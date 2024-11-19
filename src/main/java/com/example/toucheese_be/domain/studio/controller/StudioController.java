@@ -23,7 +23,9 @@ public class StudioController {
 
     // TODO : 전체 컨셉 조회
     @GetMapping("/")
-    public void getConcepts() {}
+    public void getConcepts() {
+
+    }
 
     // TODO : 컨셉 별 스튜디오 전체 조회
     @GetMapping("/{conceptId}")
