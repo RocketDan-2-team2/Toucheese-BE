@@ -5,14 +5,17 @@ import com.example.toucheese_be.domain.studio.dto.StudioDto;
 import com.example.toucheese_be.domain.studio.dto.StudioSearchFilterDto;
 import com.example.toucheese_be.domain.studio.entity.QPortfolio;
 import com.example.toucheese_be.domain.studio.entity.QStudio;
+import com.example.toucheese_be.domain.studio.entity.QStudioImage;
 import com.example.toucheese_be.domain.studio.entity.Studio;
-import com.example.toucheese_be.domain.studio.entity.constant.Popularity;
 import com.example.toucheese_be.domain.studio.entity.constant.PriceFilter;
 import com.example.toucheese_be.domain.studio.entity.constant.Region;
+import com.example.toucheese_be.domain.studio.entity.constant.StudioImageType;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,6 +29,8 @@ public class StudioRepositoryImpl implements StudioRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
     private final QStudio studio = QStudio.studio;
     private final QItem item = QItem.item;
+    private final QPortfolio portfolio = QPortfolio.portfolio;
+    private final QStudioImage studioImage = QStudioImage.studioImage;
 
     @Override
     public Page<StudioDto> getStudioListWithPages(
@@ -84,25 +89,51 @@ public class StudioRepositoryImpl implements StudioRepositoryCustom {
                 }
             }
         }
-
-
-        // 페이징 처리
-        List<Studio> results = jpaQueryFactory.selectFrom(studio)
-                .leftJoin(studio.portfolios, QPortfolio.portfolio).fetchJoin()
+        // 1. StudioDto 기본 정보 조회
+        List<StudioDto> studioDtos = jpaQueryFactory.select(
+                        Projections.constructor(StudioDto.class,
+                                studio.id,
+                                studio.name,
+                                JPAExpressions.select(studioImage.imageUrl)
+                                        .from(studioImage)
+                                        .where(studioImage.studio.eq(studio).and(studioImage.type.eq(
+                                                StudioImageType.PROFILE)))
+                                        .limit(1),
+                                studio.popularity
+                        )
+                )
+                .from(studio)
+                .leftJoin(studio.portfolios, portfolio)
                 .where(builder)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        // 총 개수 계산
+
+        // 2. 포트폴리오 URL 그룹핑
+        // LEFT JOIN 사용
+        Map<Long, List<String>> portfolioMap = jpaQueryFactory
+                .select(portfolio.studio.id, portfolio.imageUrl)
+                .from(portfolio)
+                .where(portfolio.studio.id.in(studioDtos.stream().map(StudioDto::getId).collect(Collectors.toList())))
+                .fetch()
+                .stream()
+                .collect(Collectors.groupingBy(
+                        tuple -> tuple.get(portfolio.studio.id),
+                        Collectors.mapping(tuple -> tuple.get(portfolio.imageUrl), Collectors.toList())
+                ));
+
+        // 3. StudioDto에 포트폴리오 URL 리스트 매핑
+        studioDtos.forEach(studioDto ->
+                studioDto.setPortfolios(portfolioMap.getOrDefault(studioDto.getId(), List.of())));
+
+        // 총 개수 계산 (count query)
+        // 페이징 처리 시 쿼리 분리 : count 쿼리와 데이터 조회 쿼리를 분리하여
+        // 효율적으로 페이징 처리
         long total = jpaQueryFactory.selectFrom(studio)
                 .where(builder)
                 .fetchCount();
 
-        // 결과를 DTO로 변환
-        List<StudioDto> studioDtos = results.stream()
-                .map(StudioDto::fromEntity)
-                .collect(Collectors.toList());
 
         return new PageImpl<>(studioDtos, pageable, total);
     }

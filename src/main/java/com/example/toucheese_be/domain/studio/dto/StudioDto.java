@@ -4,16 +4,17 @@ import com.example.toucheese_be.domain.studio.entity.Portfolio;
 import com.example.toucheese_be.domain.studio.entity.Studio;
 import com.example.toucheese_be.domain.studio.entity.StudioImage;
 import com.example.toucheese_be.domain.studio.entity.constant.StudioImageType;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
-@Builder
-@AllArgsConstructor
+@Setter
 @NoArgsConstructor
 public class StudioDto {
     private Long id;
@@ -22,23 +23,16 @@ public class StudioDto {
     private Double popularity;
     private List<String> portfolios;
 
-    public static StudioDto fromEntity(Studio entity) {
-        // PROFILE 타입 이미지 필터링
-        String profileImage = entity.getImages().stream()
-                .filter(image -> image.getType() == StudioImageType.PROFILE)
-                .map(StudioImage::getImageUrl)
-                .findFirst()
-
-                .orElse(null);
-
-        return StudioDto.builder()
-                .id(entity.getId())
-                .name(entity.getName())
-                .profileImg(profileImage)
-                .popularity(entity.getPopularity())
-                .portfolios(entity.getPortfolios().stream()
-                        .map(Portfolio::getImageUrl)
-                        .collect(Collectors.toList()))
-                .build();
+    public StudioDto(
+            Long id,
+            String name,
+            String profileImg,
+            Double popularity
+    ) {
+        this.id = id;
+        this.name = name;
+        this.profileImg = profileImg;
+        this.popularity = popularity;
+        this.portfolios = new ArrayList<>();
     }
 }
