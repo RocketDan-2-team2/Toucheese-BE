@@ -1,5 +1,6 @@
 package com.example.toucheese_be.domain.order.entity;
 
+import com.example.toucheese_be.domain.order.dto.OrderUserDto;
 import com.example.toucheese_be.domain.order.entity.constant.OrderStatus;
 import com.example.toucheese_be.domain.auth.user.entity.User;
 import com.example.toucheese_be.domain.studio.entity.Studio;
@@ -49,4 +50,6 @@ public class Order {
     // 주문 상품과 연결
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<OrderItem> orderItems = new ArrayList<>();
+
+
 }

@@ -1,8 +1,11 @@
 package com.example.toucheese_be.domain.order.dto;
 
+import com.example.toucheese_be.domain.auth.user.entity.User;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
+@Builder
 @Getter
 @AllArgsConstructor
 public class OrderUserDto {
@@ -14,4 +17,13 @@ public class OrderUserDto {
     private String userEmail;
     // 사용자 연락처
     private String userPhone;
+
+    public static OrderUserDto fromEntity(User user) {
+        return OrderUserDto.builder()
+                .userId(user.getId())
+                .userName(user.getName())
+                .userPhone(user.getPhoneNumber())
+                .userEmail(user.getEmail())
+                .build();
+    }
 }
