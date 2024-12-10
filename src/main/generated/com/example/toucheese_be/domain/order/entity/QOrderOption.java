@@ -26,6 +26,8 @@ public class QOrderOption extends EntityPathBase<OrderOption> {
 
     public final com.example.toucheese_be.domain.item.entity.QItemOption itemOption;
 
+    public final StringPath name = createString("name");
+
     public final QOrderItem orderItem;
 
     public final NumberPath<Integer> price = createNumber("price", Integer.class);

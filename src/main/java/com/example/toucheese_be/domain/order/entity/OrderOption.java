@@ -36,6 +36,9 @@ public class OrderOption {
     @JoinColumn(name = "item_option_id", nullable = false)
     private ItemOption itemOption;
 
+    // 옵션 이름
+    private String name;
+
     // 옵션 수량
     private Integer quantity;
 

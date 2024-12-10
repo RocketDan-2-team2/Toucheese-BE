@@ -41,6 +41,9 @@ public class OrderItem {
     @JoinColumn(name = "item_id", nullable = false)
     private Item item;
 
+    // 상품 이름
+    private String name;
+
     // 상품 수량
     private Integer quantity;
 
