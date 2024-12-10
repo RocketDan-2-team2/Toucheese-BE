@@ -2,6 +2,11 @@ spring:
   main:
     banner-mode: off
 
+  google:
+    sheets:
+      credentials: ${SHEETS_KEY}
+      spreadsheetId: ${SHEETS_ID}
+
   datasource:
     url: jdbc:postgresql://db-toucheese-2.cja2kuiisy1n.ap-northeast-2.rds.amazonaws.com/postgres
     username: ${DB_USERNAME}
