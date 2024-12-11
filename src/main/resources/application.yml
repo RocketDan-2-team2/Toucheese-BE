@@ -37,3 +37,5 @@ logging:
           descriptor:
             sql: trace
 
+toss:
+  secret: ${TOSS_SECRET_KEY}

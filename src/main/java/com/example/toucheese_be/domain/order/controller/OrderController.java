@@ -20,4 +20,18 @@ public class OrderController {
         boolean isOrderCreated = orderService.createOrder(orderRequestDto);
         return ResponseEntity.ok(isOrderCreated);
     }
+
+
+
+    // readTossPayment
+    @GetMapping("{id}/payment") // 이 주문에 포함되어있는 payment 이니까 엔드포인트를 다음과 같이 구성
+    public void readTossPayment(
+            @PathVariable("id")
+            Long id
+    ) {
+        // orderService.readTossPayment(id);
+    }
+
+
+    // cancelPayment
 }

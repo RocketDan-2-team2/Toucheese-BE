@@ -14,24 +14,50 @@ import com.example.toucheese_be.domain.auth.user.repository.UserRepository;
 
 import com.example.toucheese_be.domain.studio.entity.Studio;
 import com.example.toucheese_be.domain.studio.repository.StudioRepository;
+import com.example.toucheese_be.domain.toss.dto.PaymentConfirmDto;
+import com.example.toucheese_be.domain.toss.service.TossHttpService;
 import com.example.toucheese_be.global.error.ErrorCode;
 import com.example.toucheese_be.global.error.GlobalCustomException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
+import java.util.LinkedHashMap;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import org.springframework.web.server.ResponseStatusException;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderService {
+    private final TossHttpService tossHttpService;
     private final UserRepository userRepository;
     private final StudioRepository studioRepository;
     private final ItemRepository itemRepository;
     private final ItemOptionRepository itemOptionRepository;
     private final OrderRepository orderRepository;
 
-    // 추후 querydsl 로 쿼리 성능 최적화할 예정
+
+    @Transactional
+    public void confirmPayment(PaymentConfirmDto dto) {
+        Object tossPaymentObj = tossHttpService.confirmPayment(dto);
+        // 2. 응답 데이터에서 결제 정보 추출
+        LinkedHashMap<String, Object> tossData = (LinkedHashMap<String, Object>) tossPaymentObj;
+        String orderName = tossData.get("orderName").toString();
+        // orderName 에서 itemId 회수 하여 이에 해당하는 Item 엔티티 조회
+        // Item 엔티티를 바탕으로 OrderItem 만들기
+
+        // 이떄 결제 성공하였고 결제 status 를 true 로 변경 후 리턴
+
+    }
+
+
+    // TODO: 추후 querydsl 로 쿼리 성능 최적화할 예정
+    // TODO: boolean 에서 orderId 와 amount 르 반환하는 로직으로 변경해야함
+    // TODO : 프론트엔드가 Toss 서버로 요청을 보낼 때, Authorization 헤더 값으로 Bearer Token이 필요 -> 응답의 Hedaer 로 제공하자
     @Transactional
     public boolean createOrder(OrderRequestDto dto) {
         // 사용자 정보 생성 및 저장
@@ -97,4 +123,9 @@ public class OrderService {
         orderRepository.save(order);
         return true;
     }
+
+    // TODO: readTossPayment
+
+    // TODO: cancelPayment
+
 }
