@@ -5,6 +5,7 @@ import com.example.toucheese_be.domain.auth.admin.dto.AdminOrderDto;
 import com.example.toucheese_be.domain.auth.admin.dto.AdminOrderItemDto;
 import com.example.toucheese_be.domain.order.entity.Order;
 import com.example.toucheese_be.domain.order.entity.OrderItem;
+import com.example.toucheese_be.domain.order.entity.OrderOption;
 import com.example.toucheese_be.domain.order.entity.QOrder;
 import com.example.toucheese_be.domain.order.entity.QOrderItem;
 import com.example.toucheese_be.domain.order.entity.QOrderOption;
@@ -32,6 +33,25 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
     private final QOrderItem orderItem = QOrderItem.orderItem;
     private final QOrderOption orderOption = QOrderOption.orderOption;
     private final QStudio studio = QStudio.studio;
+
+
+    // 아직 미사용
+    @Override
+    public List<OrderItem> findOrderItemsByIds(List<Long> orderItemIds) {
+        return jpaQueryFactory.selectFrom(orderItem)
+                .where(orderItem.id.in(orderItemIds))
+                .fetch();
+    }
+
+    // 아직 미사용
+    @Override
+    public List<OrderOption> findOrderOptionsByIds(List<Long> orderOptionIds) {
+        return jpaQueryFactory.selectFrom(orderOption)
+                .where(orderOption.id.in(orderOptionIds))
+                .fetch();
+    }
+
+
 
     @Override
     public Page<AdminOrderDto> findAllOrdersWithDetails(PageRequestDto dto) {
@@ -79,4 +99,6 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
         // 5. Page 객체로 반환
         return new PageImpl<>(adminOrderDtos, pageable, total);
     }
+
+
 }

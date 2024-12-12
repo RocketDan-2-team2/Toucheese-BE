@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 public class OrderController {
     private final OrderService orderService;
 
+    /**
+     * 주문 생성
+     */
     @PostMapping("/create")
     public ResponseEntity<Boolean> getCreateOrder(
             @RequestBody
