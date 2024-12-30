@@ -2,6 +2,7 @@ package com.example.toucheese_be.domain.user.service;
 
 import com.example.toucheese_be.domain.user.constant.Role;
 import com.example.toucheese_be.domain.user.constant.SocialProvider;
+import com.example.toucheese_be.domain.user.dto.request.NicknameCheck;
 import com.example.toucheese_be.domain.user.dto.request.OAuthSignInDto;
 import com.example.toucheese_be.domain.user.dto.request.UpdateUserDto;
 import com.example.toucheese_be.domain.user.dto.response.SocialLoginDto;
@@ -221,22 +222,26 @@ public class PrincipalDetailsService implements UserDetailsService {
         User user = userRepository.findById(principalDetails.getUserId())
                 .orElseThrow(() -> new GlobalCustomException(ErrorCode.USER_NOT_FOUND));
 
-        if (dto.getNickname() != null) {
-            userRepository.findByNickname(dto.getNickname())
-                    .ifPresent(existingUser -> {
-                        if (!existingUser.getId().equals(user.getId())) {
-                            throw new GlobalCustomException(ErrorCode.UPDATE_DUPLICATED_NICKNAME);
-                        }
-                    });
+        if (dto.getUsername() != null && !dto.getUsername().isEmpty()) {
+            user.setUsername(dto.getUsername());
+        } else if (dto.getEmail() != null && !dto.getEmail().isEmpty()) {
+            user.setEmail(dto.getEmail());
+        } else if (dto.getPhone() != null && !dto.getPhone().isEmpty()) {
+            user.setEmail(dto.getPhone());
+        } else if (dto.getNickname() != null && !dto.getNickname().isEmpty()) {
+            user.setEmail(dto.getNickname());
         }
-
-        user.setUsername(dto.getUsername() == null ? "none" : dto.getUsername());
-        user.setEmail(dto.getEmail() == null ? "none" : dto.getEmail());
-        user.setPhone(dto.getPhone() == null ? "none" : dto.getPhone());
-        user.setUsername(dto.getUsername() == null ? "none" : dto.getUsername());
-
         userRepository.save(user);
         return true;
+    }
+
+    /**
+     * 닉네임 중복 체크
+     * @param dto
+     * @return
+     */
+    public Boolean checkNickname(NicknameCheck dto) {
+        return userRepository.findByNickname(dto.getNickname()).isPresent();
     }
 
 
@@ -263,4 +268,6 @@ public class PrincipalDetailsService implements UserDetailsService {
                 .authorities(user.getRole().getRoles())
                 .build();
     }
+
+
 }

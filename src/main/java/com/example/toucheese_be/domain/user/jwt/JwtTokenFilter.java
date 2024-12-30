@@ -40,7 +40,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 "/public/**",
                 "/api/v1/studio/**",
                 "/api/v1/auth/sign-up/**",
-                "/api/v1/auth/sign-in/**"
+                "/api/v1/auth/sign-in/**",
+                "/api/v1/auth/nickname/check"
         };
         String path = request.getRequestURI();
         return Arrays.stream(excludePath).anyMatch(path::startsWith);
