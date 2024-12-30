@@ -146,7 +146,7 @@ public class PrincipalDetailsService implements UserDetailsService {
                 .userId(user.getId())
                 .email(user.getEmail())
                 .username(user.getUsername())
-                .nickname(user.getPhone())
+                .nickname(user.getNickname())
                 .phone(user.getPhone())
                 .profileImg(user.getProfileImg())
                 .role(user.getRole())
