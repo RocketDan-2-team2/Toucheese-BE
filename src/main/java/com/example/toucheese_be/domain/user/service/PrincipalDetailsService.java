@@ -99,8 +99,13 @@ public class PrincipalDetailsService implements UserDetailsService {
         if (optionalUser.isPresent()) {
             user = optionalUser.get();
             log.info("이전에 로그인을 한 적이 있습니다. (userId : {})", user.getId());
-            user.setEmail(dto.getEmail());
-            user.setUsername(dto.getUsername());
+
+            if (dto.getEmail() != null && !dto.getEmail().isEmpty()) {
+                user.setEmail(dto.getEmail());
+            }
+            if (dto.getUsername() != null && !dto.getUsername().isEmpty()) {
+                user.setUsername(dto.getUsername());
+            }
             userRepository.save(user);
             principalDetails = new PrincipalDetails(user);
             isNewUser = false;
@@ -108,10 +113,10 @@ public class PrincipalDetailsService implements UserDetailsService {
         // 최초 로그인
         else {
             String userEmail = "none";
-            if (dto.getEmail() == null || dto.getEmail().isEmpty()) {
-                userEmail = dto.getSocialId() + "@private.com";
-            } else {
+            if (dto.getEmail() != null && !dto.getEmail().isEmpty()) {
                 userEmail = dto.getEmail();
+            } else {
+                userEmail = dto.getSocialId() + "@private.com";
             }
 
             user = userRepository.save(User.builder()
