@@ -224,11 +224,14 @@ public class PrincipalDetailsService implements UserDetailsService {
 
         if (dto.getUsername() != null && !dto.getUsername().isEmpty()) {
             user.setUsername(dto.getUsername());
-        } else if (dto.getEmail() != null && !dto.getEmail().isEmpty()) {
+        }
+        if (dto.getEmail() != null && !dto.getEmail().isEmpty()) {
             user.setEmail(dto.getEmail());
-        } else if (dto.getPhone() != null && !dto.getPhone().isEmpty()) {
+        }
+        if (dto.getPhone() != null && !dto.getPhone().isEmpty()) {
             user.setPhone(dto.getPhone());
-        } else if (dto.getNickname() != null && !dto.getNickname().isEmpty()) {
+        }
+        if (dto.getNickname() != null && !dto.getNickname().isEmpty()) {
             user.setNickname(dto.getNickname());
         }
         userRepository.save(user);
