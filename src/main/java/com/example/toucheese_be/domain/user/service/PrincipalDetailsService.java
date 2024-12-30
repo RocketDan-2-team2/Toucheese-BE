@@ -221,10 +221,20 @@ public class PrincipalDetailsService implements UserDetailsService {
         User user = userRepository.findById(principalDetails.getUserId())
                 .orElseThrow(() -> new GlobalCustomException(ErrorCode.USER_NOT_FOUND));
 
+        if (dto.getNickname() != null) {
+            userRepository.findByNickname(dto.getNickname())
+                    .ifPresent(existingUser -> {
+                        if (!existingUser.getId().equals(user.getId())) {
+                            throw new GlobalCustomException(ErrorCode.UPDATE_DUPLICATED_NICKNAME);
+                        }
+                    });
+        }
+
         user.setUsername(dto.getUsername() == null ? "none" : dto.getUsername());
         user.setEmail(dto.getEmail() == null ? "none" : dto.getEmail());
         user.setPhone(dto.getPhone() == null ? "none" : dto.getPhone());
         user.setUsername(dto.getUsername() == null ? "none" : dto.getUsername());
+
         userRepository.save(user);
         return true;
     }

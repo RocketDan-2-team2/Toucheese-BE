@@ -44,6 +44,8 @@ public enum ErrorCode {
     EXTRACT_EMAIL_FROM_TOKEN_FAIL(4034, HttpStatus.FORBIDDEN, "accessToken에서 email 추출 실패"),
     FCM_SERVICE_UNAVAILABLE(4035, HttpStatus.NOT_FOUND, "FCM 서비스 통신에 실패하였습니다."),
 
+    UPDATE_DUPLICATED_NICKNAME(4036, HttpStatus.BAD_REQUEST, "이미 존재하는 닉네임입니다."),
+
     // 서버 관련 에러
     INTERNAL_SERVER_ERROR(5000, HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류가 발생했습니다."),
     DATABASE_ERROR(5001, HttpStatus.INTERNAL_SERVER_ERROR, "데이터베이스 오류가 발생했습니다."),
