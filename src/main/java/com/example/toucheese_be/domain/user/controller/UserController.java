@@ -2,6 +2,7 @@ package com.example.toucheese_be.domain.user.controller;
 
 
 import com.example.toucheese_be.domain.user.dto.request.CreateUserDto;
+import com.example.toucheese_be.domain.user.dto.request.NicknameCheck;
 import com.example.toucheese_be.domain.user.dto.request.OAuthSignInDto;
 import com.example.toucheese_be.domain.user.dto.request.SignInDto;
 import com.example.toucheese_be.domain.user.dto.request.UpdateUserDto;
@@ -84,5 +85,15 @@ public class UserController {
     @GetMapping("/details")
     public CommonResponse<UserDto> getUserDetails() {
         return principalDetailsService.getUserDetails();
+    }
+
+
+    // 닉네임 중복 체크
+    @PostMapping("/nickname/check")
+    public Boolean checkNickname(
+        @RequestBody
+        NicknameCheck dto
+    ) {
+        return principalDetailsService.checkNickname(dto);
     }
 }
