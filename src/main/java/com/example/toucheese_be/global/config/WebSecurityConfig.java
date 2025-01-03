@@ -28,10 +28,9 @@ public class WebSecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
+                                "/v3/api-docs/**",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
-                                "/v3/api-docs/**",
-                                "/public/**",
                                 "/api/v1/studio/**",
                                 "/api/v1/auth/sign-up/**",
                                 "/api/v1/auth/sign-in/**",
