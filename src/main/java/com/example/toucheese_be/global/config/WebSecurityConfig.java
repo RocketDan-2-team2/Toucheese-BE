@@ -29,11 +29,8 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/swagger-ui.html",
-                                "/swagger-ui/index.html/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
-                                "/swagger-resources/**",
-                                "/webjars/**",
                                 "/public/**",
                                 "/api/v1/studio/**",
                                 "/api/v1/auth/sign-up/**",

@@ -111,8 +111,7 @@ public class StudioRepositoryImpl implements StudioRepositoryCustom {
                 studioDto.setPortfolios(portfolioMap.getOrDefault(studioDto.getId(), List.of())));
 
         // 총 개수 계산 (count query)
-        // 페이징 처리 시 쿼리 분리 : count 쿼리와 데이터 조회 쿼리를 분리하여
-        // 효율적으로 페이징 처리
+        // 페이징 처리 시 쿼리 분리 : count 쿼리와 데이터 조회 쿼리를 분리하여 효율적으로 페이징 처리
         long total = jpaQueryFactory.selectFrom(studio)
                 .where(builder)
                 .fetchCount();

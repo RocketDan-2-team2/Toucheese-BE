@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
-public class UserController {
+public class UserController implements UserApiSpecification{
     private final PrincipalDetailsService principalDetailsService;
 
     // 일반 회원가입
@@ -52,19 +52,6 @@ public class UserController {
 
     // 소셜 로그인
     @PostMapping("/sign-in/oauth")
-    @Operation(
-            summary = "소셜 로그인",
-            description = "<p>소셜 Provider (구글, 카카오, 애플) 리소스 서버로 부터 받아온 사용자 정보를 가지고 요청</p>"
-                    + "<p>로그인 성공 시 JWT(accessToken, refreshToken)를 발급됩니다. </p> "
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공 응답",
-                    content = @Content(schema = @Schema(implementation = ApiResponse.class))),
-            @ApiResponse(responseCode = "201", description = "잘못된 요청",
-                    content = @Content(schema = @Schema(implementation = ApiResponse.class))),
-            @ApiResponse(responseCode = "500", description = "서버 에러",
-                    content = @Content(schema = @Schema(implementation = ApiResponse.class)))
-    })
     public CommonResponse<SocialLoginDto> oAuthSignIn(
             @RequestBody
             OAuthSignInDto dto
@@ -96,4 +83,6 @@ public class UserController {
     ) {
         return principalDetailsService.checkNickname(dto);
     }
+
+
 }
