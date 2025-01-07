@@ -1,18 +1,14 @@
-# 특별한 인자 없이 프로젝트 실행 시
-# application-dev.yaml 을 사용해서 프로젝트 실행
 spring:
   web:
     resources:
       add-mappings: false
   profiles:
     default: prod
-  # 처음에 나오는 Spring Logo 제거
   main:
     banner-mode: off
 
 #fcm:
 #  config: ${FIREBASE_CONFIG}
-
 
 springdoc:
   packages-to-scan: com.example.toucheese_be
